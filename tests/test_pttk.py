@@ -18,7 +18,6 @@ def f_matern(x,theta,y):
 
 def main():
     print("--------------------------------------")
-    print(" ")
     d=3
     d_theta=2
     n=0
@@ -51,6 +50,7 @@ def main():
         K=[[ f_matern(x_points[:,i],theta,y_points[:,j]) for j in range(Nt)] for i in range(Ns)]
         err=np.linalg.norm(K-K_approx)/np.linalg.norm(K)
         print("the relative error is :"+str(err))
+        print(" ")
         errors.append(err)
 
     plt.figure(figsize=(7, 4.5))
@@ -67,12 +67,13 @@ def main():
     tols=[1e-4,1e-5,1e-6,1e-8,1e-10]
     errors=[]
     for tol in tols:
-        print("n is ="+str(n))
+        print("the tolerence is ="+str(tol))
         cores_approx,ranks_approx=PTTK_offline(f_matern,domain,n,x_points,y_points,d,d_theta,Ns,Nt,tol)
         K_approx=PTTK_online(theta, d_theta,d,domain,n,cores_approx,ranks_approx)
         K=[[ f_matern(x_points[:,i],theta,y_points[:,j]) for j in range(Nt)] for i in range(Ns)]
         err=np.linalg.norm(K-K_approx)/np.linalg.norm(K)
         print("the relative error is :"+str(err))
+        print(" ")
         errors.append(err)
 
     plt.figure(figsize=(7, 4.5))
@@ -99,6 +100,7 @@ def main():
         K_approx=PTTK_online(theta, d_theta,d,domain,n,cores_approx,ranks_approx)
         tb=time.perf_counter()
         Time.append(tb-ta)
+        print(" ")
     plt.figure(figsize=(7, 4.5))
     plt.semilogy(list_N, Time, marker='o', color='blue', markersize=7,label="PPTK online time")
     plt.grid(True)
