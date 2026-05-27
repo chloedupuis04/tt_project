@@ -13,7 +13,6 @@ from tt_project.tt_to_tensor import tt_to_tensor
 def phi(x,alpha,beta):
     return (beta-alpha)/2*x + (alpha+beta)/2
 
-
 def Phi(x, eta, a, b, n):
     s = 0.0
     for k in range(1, n):
@@ -33,7 +32,7 @@ def khatri_rao(A,B):
 def PTTK_offline(f,domain,n,x_points,y_points,d,d_theta,N_s,N_t,tol=1e-6):
     t0=time.perf_counter()
 
-    #stage1:build M and U_i,V_i
+    #phase1:build M and U_i,V_i
     D = domain.shape[0]
 
 
@@ -45,7 +44,7 @@ def PTTK_offline(f,domain,n,x_points,y_points,d,d_theta,N_s,N_t,tol=1e-6):
     M=np.zeros(tuple([n]*D))
 
 
-    for idx in np.ndindex(*M.shape): #would it be better to use np.meshgrid and vectorize the function evaluation???
+    for idx in np.ndindex(*M.shape): 
         eta_point=[Eta[j][idx[j]] for j in range(D)]
         x_eta=eta_point[:d]
         theta_eta=eta_point[d:d+d_theta]
@@ -77,20 +76,15 @@ def PTTK_offline(f,domain,n,x_points,y_points,d,d_theta,N_s,N_t,tol=1e-6):
     print("time for stage 1 is :"+str(t1-t0)+" seconds")
 
 
-    #stage2:compute the approximation
+    #phase2:compute the approximation
     cores,cores_shape,ranks=tt_svd_delta(M,eps=tol)
     print("the error form the tt approximation is :")
-    err(M,cores)
-    #print("the ranks are :"+str(ranks))
-    #print("the storage of the tt format is :"+str(tt_storage(cores)))
-    #print("the compression ratio is :"+str(compression_ratio(M,cores)))
+    #err(M,cores) if we want to know the error of the tt approximation of M
     t2=time.perf_counter()
     print("time for stage 2 is :"+str(t2-t1)+" seconds")
 
-    #stage3: construct factor matrix 
+    #phase3: construct factor matrix 
     S=U[0]@vertical_core(cores[0])
-
-
     for i in range(1,d):
         G_i2=vertical_core(cores[i])
         S = khatri_rao(S.T, (U[i]).T).T@G_i2
@@ -103,7 +97,7 @@ def PTTK_offline(f,domain,n,x_points,y_points,d,d_theta,N_s,N_t,tol=1e-6):
     t3=time.perf_counter()
     print("time for stage 3 is :"+str(t3-t2)+" seconds")
 
-    #stage4 
+    #phase4 
     S_twisted=S[None,:,:]
     T_twisted=T.T[:,:,None]
 

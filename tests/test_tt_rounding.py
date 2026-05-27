@@ -7,17 +7,14 @@ from tt_project.tt_to_tensor import tt_to_tensor
 
 
 def main ():
-    
-    
-    
     coresX=[np.random.rand(1,10,4),np.random.rand(4,10,8),np.random.rand(8,10,3),np.random.rand(3,10,1)]
     coresY=[np.random.rand(1,10,3),np.random.rand(3,10,6),np.random.rand(6,10,4),np.random.rand(4,10,1)]
     eta=1e-4
     coresY[0]=eta*coresY[0]
     ranks_before,cores_sum,S=sum_tensor(coresX,coresY)
+    
     # Different rounding tolerances
     epsilons = np.array([1e-1, 1e-2, 1e-3, 1e-4, 1e-5, 1e-6])
-
     errors = []
     all_ranks_after = []
 
