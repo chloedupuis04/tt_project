@@ -1,3 +1,4 @@
+<<<<<<< README.md
 # Tensor Train Decomposition Project
 
 ## Description
