@@ -24,6 +24,7 @@ src/tt_project/
 - `tt_partialcontractionRL.py` – Right-to-left partial contraction  
 - `left_ortho.py` – Left orthogonalization  
 - `right_ortho.py` – Right orthogonalization  
+- `PTTK.py` – PTTK offline and online stages
 
 ---
 
