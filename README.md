@@ -25,6 +25,7 @@ src/tt_project/
 - `tt_partialcontractionRL.py` – Right-to-left partial contraction  
 - `left_ortho.py` – Left orthogonalization  
 - `right_ortho.py` – Right orthogonalization  
+- `PTTK.py` – PTTK offline and online stages
 
 ---
 
@@ -85,12 +86,6 @@ Example:
 
 ```bash
 python tests/test_tt_svd_delta.py
-```
-
-or:
-
-```bash
-python tests/test_tt_rounding.py
 ```
 
 ---
