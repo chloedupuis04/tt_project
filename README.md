@@ -87,12 +87,6 @@ Example:
 python tests/test_tt_svd_delta.py
 ```
 
-or:
-
-```bash
-python tests/test_tt_rounding.py
-```
-
 ---
 
 # Author
