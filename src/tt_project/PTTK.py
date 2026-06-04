@@ -21,7 +21,6 @@ def Phi(x, eta, a, b, n):
         s += Tk_x * Tk_eta
     return (2/n) * s + (1/n)
 
-
 def khatri_rao(A,B):
     m,q1=A.shape
     p,q2=B.shape
@@ -41,7 +40,6 @@ def PTTK_offline(f,domain,n,x_points,y_points,d,d_theta,N_s,N_t,tol=1e-6):
         Eta.append(eta_j)
     M=np.zeros(tuple([n]*D))
 
-
     for idx in np.ndindex(*M.shape): 
         eta_point=[Eta[j][idx[j]] for j in range(D)]
         x_eta=eta_point[:d]
@@ -58,7 +56,6 @@ def PTTK_offline(f,domain,n,x_points,y_points,d,d_theta,N_s,N_t,tol=1e-6):
         V_i=np.zeros((N_t,n))
 
         for k in range(N_s):
-
             qs_i=[Phi(x_points[i,k],phi(cheb_node,domain[i,0],domain[i,1]),domain[i,0],domain[i,1],n) for cheb_node in cheb_nodes]
             U_i[k,:]=qs_i
             
