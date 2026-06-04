@@ -34,8 +34,6 @@ def PTTK_offline(f,domain,n,x_points,y_points,d,d_theta,N_s,N_t,tol=1e-6):
 
     #phase1:build M and U_i,V_i
     D = domain.shape[0]
-
-
     Eta = []
     cheb_nodes = cheb.chebpts1(n)
     for j in range(D):
@@ -64,7 +62,6 @@ def PTTK_offline(f,domain,n,x_points,y_points,d,d_theta,N_s,N_t,tol=1e-6):
             qs_i=[Phi(x_points[i,k],phi(cheb_node,domain[i,0],domain[i,1]),domain[i,0],domain[i,1],n) for cheb_node in cheb_nodes]
             U_i[k,:]=qs_i
             
-
         for k in range(N_t):
             qt_i=[Phi(y_points[i,k],phi(cheb_node,domain[i+d+d_theta,0],domain[i+d+d_theta,1]),domain[i+d+d_theta,0],domain[i+d+d_theta,1],n) for cheb_node in cheb_nodes]
             V_i[k,:]=qt_i
@@ -74,7 +71,6 @@ def PTTK_offline(f,domain,n,x_points,y_points,d,d_theta,N_s,N_t,tol=1e-6):
 
     t1=time.perf_counter()
     print("time for stage 1 is :"+str(t1-t0)+" seconds")
-
 
     #phase2:compute the approximation
     cores,cores_shape,ranks=tt_svd_delta(M,eps=tol)
