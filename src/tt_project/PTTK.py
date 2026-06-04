@@ -78,7 +78,6 @@ def PTTK_offline(f,domain,n,x_points,y_points,d,d_theta,N_s,N_t,tol=1e-6):
 
     #phase2:compute the approximation
     cores,cores_shape,ranks=tt_svd_delta(M,eps=tol)
-    print("the error form the tt approximation is :")
     #err(M,cores) if we want to know the error of the tt approximation of M
     t2=time.perf_counter()
     print("time for stage 2 is :"+str(t2-t1)+" seconds")
