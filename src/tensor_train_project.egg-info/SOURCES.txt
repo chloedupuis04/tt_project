@@ -1,10 +1,13 @@
+README.md
 pyproject.toml
 src/tensor_train_project.egg-info/PKG-INFO
 src/tensor_train_project.egg-info/SOURCES.txt
 src/tensor_train_project.egg-info/dependency_links.txt
 src/tensor_train_project.egg-info/top_level.txt
 src/tt_project/PTTK.py
+src/tt_project/TT.py
 src/tt_project/__int__.py
+src/tt_project/algo.py
 src/tt_project/delta_rank.py
 src/tt_project/err.py
 src/tt_project/hilbert_tensor.py
@@ -21,3 +24,7 @@ src/tt_project/tt_svd_delta.py
 src/tt_project/tt_to_tensor.py
 src/tt_project/v2h.py
 src/tt_project/vertical_core.py
+tests/test_pttk.py
+tests/test_theta.py
+tests/test_tt_rounding.py
+tests/test_tt_svd_delta.py

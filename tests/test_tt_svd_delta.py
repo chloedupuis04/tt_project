@@ -40,7 +40,7 @@ def main():
     plt.title("TT-SVD approximation error")
     plt.grid(True)
     plt.legend()
-    plt.savefig("figures/TT-SVD_error.pdf")
+    plt.savefig("tests/figures/TT-SVD_error.pdf")
     plt.close()
 
 
