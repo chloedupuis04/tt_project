@@ -38,7 +38,7 @@ def TT_Chebyshev_interpolation(f,domain,n,d_theta,tol=1e-6,tt_cross=False):
 
     #cores,cores_shape,ranks=tt_svd_delta(M,eps=tol)
     if tt_cross:
-        raise NotImplementedError("Don't know how cna i use this as we need ranks as input for the tt_cross")
+        raise NotImplementedError("Don't know how can i use fucntion tensor_train_cross as we need ranks as input for the tt_cross")
     else:
         tt=TT.from_TTSVD(M,tol)
     #err(M,cores) if we want to know the error of the tt approximation of M

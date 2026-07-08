@@ -5,16 +5,14 @@ from tt_project.TT_chebyshev import TT_Chebyshev_interpolation, TT_Chebyshev_eva
 
 def f(theta):
     theta=np.asarray(theta)
-    return np.exp(-np.sum(theta**2))
-def f2(theta):
-    theta=np.asarray(theta)
     return np.exp(np.sum(np.abs(theta)))
-
-def corner_peak(theta):
-    theta = np.asarray(theta)
-    d = len(theta)
-    c = np.ones(d)
-    return (1 + np.sum(c * theta)) ** (-(d + 1))
+def make_corner_peak(c):
+    c=np.asarray(c)
+    def corner_peak(theta):
+        theta = np.asarray(theta)
+        d = len(theta)
+        return (1 + np.sum(c * theta)) ** (-(d + 1))
+    return corner_peak
 
 def plots_various_n(d_theta,nbr_theta,domain,f,n_values,name_plots1,name_plots2):
     errors=[]
@@ -55,13 +53,14 @@ def main():
 
     print("test 2")
     n_values=[2,4,6,8,10,12]
-    d_theta=3
+    d_theta=4
     nbr_theta=8
     domain=np.array([[-1,1]]*d_theta)
-    plots_various_n(d_theta,nbr_theta,domain,f,n_values,"tests/figures/error_vs_nbr_chebnodes_f1.pdf","tests/figures/total_entries_vs_nbr_chebnodes_f1.pdf")
-    plots_various_n(d_theta,nbr_theta,domain,f2,n_values,"tests/figures/error_vs_nbr_chebnodes_f2.pdf","tests/figures/total_entries_vs_nbr_chebnodes_f2.pdf")
+    plots_various_n(d_theta,nbr_theta,domain,f,n_values,"tests/figures/error_vs_nbr_chebnodes_f2.pdf","tests/figures/total_entries_vs_nbr_chebnodes_f2.pdf")
 
     domain=np.array([[0,1]]*d_theta)
+    c=np.random.rand(d_theta)
+    corner_peak=make_corner_peak(c)
     plots_various_n(d_theta,nbr_theta,domain,corner_peak,n_values,"tests/figures/error_vs_nbr_chebnodes_corner_peak.pdf","tests/figures/total_entries_vs_nbr_chebnodes_corner_peak.pdf")
   
 
