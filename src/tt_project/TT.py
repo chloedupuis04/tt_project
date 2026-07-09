@@ -16,8 +16,9 @@ class TT:
         cores, cores_shape, ranks = tt_svd_delta(tensor, eps)
         return TT(cores)
     
-    def from_TTcross(tensor,ranks,eps):
-        cores = tensor_train_cross(tensor, ranks,eps)
+    def from_TTcross(tensor,max_rank,eps,d_theta):
+        max_ranks=[1]+[max_rank]*(d_theta-1)+[1]
+        cores = tensor_train_cross(tensor, max_ranks,eps)
         return TT(cores)
 
     def random_initialization(shape,ranks,):
@@ -47,4 +48,10 @@ class TT:
     
     def total_entries(self):
         return sum(G.size for G in self.cores)
+    
+    def get_tt_ranks(self):
+        ranks = [self.cores[0].shape[0]]
+        for G in self.cores:
+            ranks.append(G.shape[2])
+        return ranks
     

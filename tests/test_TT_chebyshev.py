@@ -14,12 +14,12 @@ def make_corner_peak(c):
         return (1 + np.sum(c * theta)) ** (-(d + 1))
     return corner_peak
 
-def plots_various_n(d_theta,nbr_theta,domain,f,n_values,name_plots1,name_plots2):
+def plots_various_n(d_theta,nbr_theta,domain,f,n_values,tt_cross,tol,name_plots1,name_plots2):
     errors=[]
     total_entries=[]
     for n in n_values:
         print("n is ="+str(n))
-        cores_afterrounding, ranks_rounding=TT_Chebyshev_interpolation(f,domain,n, d_theta, 1e-6)
+        cores_afterrounding, ranks_rounding=TT_Chebyshev_interpolation(f,domain,n, d_theta, tol,tt_cross)
 
         shape=tuple([nbr_theta]*d_theta)
         K_approx=np.zeros(shape)
@@ -49,19 +49,21 @@ def plots_various_n(d_theta,nbr_theta,domain,f,n_values,name_plots1,name_plots2)
 
 def main():
 
-   
-
     print("test 2")
     n_values=[2,4,6,8,10,12]
-    d_theta=4
-    nbr_theta=8
+    d_theta=3
+    nbr_theta=3
     domain=np.array([[-1,1]]*d_theta)
-    plots_various_n(d_theta,nbr_theta,domain,f,n_values,"tests/figures/error_vs_nbr_chebnodes_f2.pdf","tests/figures/total_entries_vs_nbr_chebnodes_f2.pdf")
+    tol=1e-6
+    plots_various_n(d_theta,nbr_theta,domain,f,n_values,False,tol,"tests/figures/error_vs_nbr_chebnodes_f2.pdf","tests/figures/total_entries_vs_nbr_chebnodes_f2.pdf")
 
     domain=np.array([[0,1]]*d_theta)
     c=np.random.rand(d_theta)
     corner_peak=make_corner_peak(c)
-    plots_various_n(d_theta,nbr_theta,domain,corner_peak,n_values,"tests/figures/error_vs_nbr_chebnodes_corner_peak.pdf","tests/figures/total_entries_vs_nbr_chebnodes_corner_peak.pdf")
+    plots_various_n(d_theta,nbr_theta,domain,corner_peak,n_values,False,tol,"tests/figures/error_vs_nbr_chebnodes_corner_peak.pdf","tests/figures/total_entries_vs_nbr_chebnodes_corner_peak.pdf")
+    tol=1e-6
+    plots_various_n(d_theta,nbr_theta,domain,corner_peak,n_values,True,tol,"tests/figures/error_vs_nbr_chebnodes_corner_peak_tt_cross.pdf","tests/figures/total_entries_vs_nbr_chebnodes_corner_peak_tt_cross.pdf")
+
   
 
 
