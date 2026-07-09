@@ -55,13 +55,12 @@ def main():
     nbr_theta=3
     domain=np.array([[-1,1]]*d_theta)
     tol=1e-6
-    plots_various_n(d_theta,nbr_theta,domain,f,n_values,False,tol,"tests/figures/error_vs_nbr_chebnodes_f2.pdf","tests/figures/total_entries_vs_nbr_chebnodes_f2.pdf")
+    plots_various_n(d_theta,nbr_theta,domain,f,n_values,False,tol,"tests/figures/error_vs_nbr_chebnodes_f.pdf","tests/figures/total_entries_vs_nbr_chebnodes_f.pdf")
 
     domain=np.array([[0,1]]*d_theta)
     c=np.random.rand(d_theta)
     corner_peak=make_corner_peak(c)
     plots_various_n(d_theta,nbr_theta,domain,corner_peak,n_values,False,tol,"tests/figures/error_vs_nbr_chebnodes_corner_peak.pdf","tests/figures/total_entries_vs_nbr_chebnodes_corner_peak.pdf")
-    tol=1e-6
     plots_various_n(d_theta,nbr_theta,domain,corner_peak,n_values,True,tol,"tests/figures/error_vs_nbr_chebnodes_corner_peak_tt_cross.pdf","tests/figures/total_entries_vs_nbr_chebnodes_corner_peak_tt_cross.pdf")
 
   
