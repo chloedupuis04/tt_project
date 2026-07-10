@@ -1,12 +1,11 @@
 
 
 import numpy as np
-from tensorly.contrib.decomposition import tensor_train_cross
+from tt_project.tt_cross_adaptive import tensor_train_cross
 from tt_project.tt_svd_delta import tt_svd_delta
 from tt_project.right_ortho import right_ortho
 from tt_project.tt_rounding import tt_rounding
 from tt_project.tt_to_tensor import tt_to_tensor
-
 
 class TT:
     def __init__(self, cores):
@@ -18,7 +17,8 @@ class TT:
     
     def from_TTcross(tensor,max_rank,eps,d_theta):
         max_ranks=[1]+[max_rank]*(d_theta-1)+[1]
-        cores = tensor_train_cross(tensor, max_ranks,eps)
+        print("Inside TT max_ranks: " + str(max_ranks) + " tol = " + str(eps))
+        cores = tensor_train_cross(tensor, rank = max_ranks,tol = eps)
         return TT(cores)
 
     def random_initialization(shape,ranks,):

@@ -1,7 +1,17 @@
 
+import os
+import sys
+PROJECT_PATH = os.getcwd()
+SOURCE_PATH = os.path.join(
+    PROJECT_PATH,"src/"
+)
+sys.path.append(SOURCE_PATH)
+
+
 import numpy as np
 import matplotlib.pyplot as plt
 from tt_project.TT_chebyshev import TT_Chebyshev_interpolation, TT_Chebyshev_evaluation
+
 
 def f(theta):
     theta=np.asarray(theta)

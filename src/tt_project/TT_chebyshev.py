@@ -1,9 +1,10 @@
 import numpy as np
 import time 
 from numpy.polynomial import chebyshev as cheb
-from tt_project.vertical_core import vertical_core
-from tt_project.horizontal_core import horizontal_core
-from tt_project.TT import TT
+from src.tt_project.vertical_core import vertical_core
+from src.tt_project.horizontal_core import horizontal_core
+from src.tt_project.TT import TT
+import pdb
 
 def phi(x,alpha,beta):
     return (beta-alpha)/2*x + (alpha+beta)/2
@@ -40,6 +41,7 @@ def TT_Chebyshev_interpolation(f,domain,n,d_theta,tol=1e-6,tt_cross=False):
     if tt_cross:
         r_max=n #not a good choice, but we can change it later, it was just to see that it is not maximal rank but the actual ranks 
         tt=TT.from_TTcross(M,r_max,tol,d_theta)
+        print("Maximum rank: ", str(r_max))
         print(tt.get_tt_ranks())
     else:
         tt=TT.from_TTSVD(M,tol)
@@ -47,6 +49,9 @@ def TT_Chebyshev_interpolation(f,domain,n,d_theta,tol=1e-6,tt_cross=False):
     #err(M,cores) if we want to know the error of the tt approximation of M
     t2=time.perf_counter()
     print("time for stage 2 is :"+str(t2-t1)+" seconds")
+    err = np.sqrt(np.sum(np.square(M - tt.tt_to_tensor())))/np.sqrt(np.sum(np.square(M)))
+    print("error in TT approximation is: " + str(err))
+    print("ranks before rounding are: " + str(tt.get_tt_ranks() ))
 
     cores_afterrounding,ranks_rounding=tt.rounding(eps=tol)
     print("ranks after rounding are :"+str(ranks_rounding))
