@@ -38,10 +38,12 @@ def TT_Chebyshev_interpolation(f,domain,n,d_theta,tol=1e-6,tt_cross=False):
 
     #cores,cores_shape,ranks=tt_svd_delta(M,eps=tol)
     if tt_cross:
+        print("using TT-cross")
         r_max=n #not a good choice, but we can change it later, it was just to see that it is not maximal rank but the actual ranks 
         tt=TT.from_TTcross(M,r_max,tol,d_theta)
         print(tt.get_tt_ranks())
     else:
+        print("using TT-SVD")
         tt=TT.from_TTSVD(M,tol)
         print(tt.get_tt_ranks())
     #err(M,cores) if we want to know the error of the tt approximation of M
