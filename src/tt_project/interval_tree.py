@@ -25,3 +25,20 @@ class IntervalTree:
 
     def intervals(self):
         return [[leaf.lo, leaf.hi] for leaf in self.leaves()]
+
+    def print_tree(self, prefix="", is_last=True, is_root=True):
+        '''
+        A nice way to visualize the tree
+        '''
+        label = "[{}, {}]".format(self.lo, self.hi)
+        if self.is_leaf():
+            label += "  (leaf)"
+        if is_root:
+            print(label)
+        else:
+            connector = "└── " if is_last else "├── "
+            print(prefix + connector + label)
+            prefix += "    " if is_last else "│   "
+        for i, child in enumerate(self.children):
+            child.print_tree(prefix, is_last=(i == len(self.children) - 1),
+                             is_root=False)

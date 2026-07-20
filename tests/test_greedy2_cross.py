@@ -25,15 +25,13 @@ def f(x, y):
 # The following auxiliary function uses the function we want to interpolate
 # but the input is the index of the discretization points instead of the actual
 # x1, x2, ...
-
-
 def func_silly_aux(ind):
     return f(x_0_disc[ind[0]], x_1_disc[ind[1]])
+
 # We first define the function that defines the entries of our tensor
-
-
 n=8
-nbr_of_y_samples=10
+# nbr_of_y_samples=10
+nbr_of_y_samples=20 # Just to see what happens 
 domain=np.array([[0,1]]+[[1,2]], dtype=float)
 axis=0
 x_root = IntervalTree(domain[axis, 0], domain[axis, 1])
@@ -42,7 +40,8 @@ x_intervals=x_root.intervals()
 n0=n*len(x_intervals)
 
 
-nbr_of_x_samples=10
+# nbr_of_x_samples=10
+nbr_of_x_samples=20
 axis=1
 y_root=IntervalTree(domain[axis, 0], domain[axis, 1])
 find_subinterval(domain,n,axis,nbr_of_x_samples,f,y_root,depth=0,max_depth=20,tol=1e-6)

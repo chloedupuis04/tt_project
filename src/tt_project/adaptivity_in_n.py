@@ -64,17 +64,17 @@ def main():
     n1=n*l1
     print("N_2 is equal to "+str(n1))
 
-    #don't thibk thsi is what we want 
-    #for x_leaf in x_root.leaves():
-        #y_root=IntervalTree(domain[axis, 0], domain[axis, 1])
-        #find_subinterval(np.array([[x_leaf.lo,x_leaf.hi]]+[[domain[axis,0],domain[axis,1]]]),n,axis,nbr_of_x_samples,f,y_root,depth=0,max_depth=20,tol=1e-6)
-       # y_root_intervals=y_root.intervals()
-        #print("the resolved intervals in y are :"+str(y_root_intervals))
-        #nbr_intervals_y=len(y_root_intervals)
-        #n1=n1+nbr_intervals_y*n
-        #print("the number of resolved intervals in y is :"+str(nbr_intervals_y))
-        #print("N_2 is equal to "+str(n*(nbr_intervals_y)))
-       # x_leaf.y_tree = y_root
+    # # don't thibk thsi is what we want 
+    # for x_leaf in x_root.leaves():
+    #     y_root=IntervalTree(domain[axis, 0], domain[axis, 1])
+    #     find_subinterval(np.array([[x_leaf.lo,x_leaf.hi]]+[[domain[axis,0],domain[axis,1]]]),n,axis,nbr_of_x_samples,f,y_root,depth=0,max_depth=20,tol=1e-6)
+    #     y_root_intervals=y_root.intervals()
+    #     print("the resolved intervals in y are :"+str(y_root_intervals))
+    #     nbr_intervals_y=len(y_root_intervals)
+    #     n1=n1+nbr_intervals_y*n
+    #     print("the number of resolved intervals in y is :"+str(nbr_intervals_y))
+    #     print("N_2 is equal to "+str(n*(nbr_intervals_y)))
+    #     x_leaf.y_tree = y_root
 
 if __name__ == "__main__":
     main() 
