@@ -11,7 +11,7 @@ def find_subinterval(domain,n,axis,nbr_of_y_samples,f,node,depth,max_depth,tol=1
     resolved=[]
     other_axis=1-axis
     fixed_samples=np.random.uniform(domain[other_axis,0], domain[other_axis,1], size=nbr_of_y_samples)
-    values_test = np.linspace(domain[axis,0], domain[axis,1], 1000)
+    values_test = np.linspace(domain[axis,0], domain[axis,1], 1000,endpoint=True)
     for fixed_sample in fixed_samples:
         p = cheb.Chebyshev.interpolate(lambda x: f(x, fixed_sample),deg=n - 1, domain=[domain[axis,0], domain[axis,1]])
         f_values = f(values_test, fixed_sample)

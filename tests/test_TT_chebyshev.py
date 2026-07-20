@@ -6,6 +6,8 @@ from tt_project.TT_chebyshev import TT_Chebyshev_interpolation, TT_Chebyshev_eva
 def f(theta):
     theta=np.asarray(theta)
     return np.exp(np.sum(np.abs(theta)))
+
+
 def make_corner_peak(c):
     c=np.asarray(c)
     def corner_peak(theta):
@@ -51,8 +53,8 @@ def main():
 
     print("test 2")
     n_values=[2,4,6,8,10,12]
-    d_theta=3
-    nbr_theta=3
+    d_theta=2
+    nbr_theta=5
     domain=np.array([[-1,1]]*d_theta)
     tol=1e-6
     plots_various_n(d_theta,nbr_theta,domain,f,n_values,False,tol,"tests/figures/error_vs_nbr_chebnodes_f.pdf","tests/figures/total_entries_vs_nbr_chebnodes_f.pdf")
@@ -62,6 +64,7 @@ def main():
     corner_peak=make_corner_peak(c)
     plots_various_n(d_theta,nbr_theta,domain,corner_peak,n_values,False,tol,"tests/figures/error_vs_nbr_chebnodes_corner_peak.pdf","tests/figures/total_entries_vs_nbr_chebnodes_corner_peak.pdf")
     plots_various_n(d_theta,nbr_theta,domain,corner_peak,n_values,True,tol,"tests/figures/error_vs_nbr_chebnodes_corner_peak_tt_cross.pdf","tests/figures/total_entries_vs_nbr_chebnodes_corner_peak_tt_cross.pdf")
+
 
   
 
