@@ -23,3 +23,5 @@ GTAGS
 *.out
 *.DS_Store
 *.sh
+*.CLAUDE
+*.claude
