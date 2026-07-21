@@ -2,19 +2,45 @@ import numpy as np
 from numpy.polynomial import chebyshev as cheb
 from tt_project.interval_tree import IntervalTree
 
-def f(x,y):
-    return 1/np.abs(x-y)
 
-      
+def make_1d_slice(f, fixed_sample, axis, dimension):
+
+    fixed_sample = np.asarray(fixed_sample)
+
+
+    def function_1d(variable):
+        coordinates = []
+
+        fixed_index = 0
+
+        for current_axis in range(dimension):
+            if current_axis == axis:
+                coordinates.append(variable)
+            else:
+                coordinates.append(fixed_sample[fixed_index])
+                fixed_index += 1
+
+        return f(*coordinates)
+
+    return function_1d
+
 def find_subinterval(domain,n,axis,nbr_of_y_samples,f,node,depth,max_depth,tol=1e-6):
     
     resolved=[]
     other_axis=1-axis
     fixed_samples=np.random.uniform(domain[other_axis,0], domain[other_axis,1], size=nbr_of_y_samples)
     values_test = np.linspace(domain[axis,0], domain[axis,1], 1000,endpoint=True)
-    for fixed_sample in fixed_samples:
-        p = cheb.Chebyshev.interpolate(lambda x: f(x, fixed_sample),deg=n - 1, domain=[domain[axis,0], domain[axis,1]])
-        f_values = f(values_test, fixed_sample)
+    for fixed_sample in fixed_samples:#this was not correct in the previous code 
+        if axis == 0:
+            function_1d = lambda x: f(x, fixed_sample) 
+        elif axis == 1:
+            function_1d = lambda y: f(fixed_sample, y)
+        else:
+            raise ValueError("For a 2D function, axis must be 0 or 1.")
+
+        p = cheb.Chebyshev.interpolate(function_1d,deg=n - 1,domain=domain[axis])
+    
+        f_values = function_1d(values_test)
         p_values = p(values_test)
         max_error = np.max(np.abs(f_values - p_values))
         resolved.append(max_error < tol)
@@ -36,45 +62,42 @@ def find_subinterval(domain,n,axis,nbr_of_y_samples,f,node,depth,max_depth,tol=1
     find_subinterval(left_domain,n,axis,nbr_of_y_samples,f,left_node,depth=depth+1,max_depth=max_depth,tol=tol)
     find_subinterval(right_domain,n,axis,nbr_of_y_samples,f,right_node,depth=depth+1,max_depth=max_depth,tol=tol)
 
+def find_subinterval_d(domain,n,axis,nbr_of_samples,f,node,depth,max_depth,tol=1e-6):
+    
+    resolved=[]
+    d=domain.shape[0]
 
-def main():
+    other_axes = [ax for ax in range(d) if ax != axis]
+    fixed_samples_mat = np.zeros((d - 1, nbr_of_samples))
 
-    n=8
-    nbr_of_y_samples=10
-    domain=np.array([[0,1]]+[[1,2]], dtype=float)
-    axis=0
-    x_root = IntervalTree(domain[axis, 0], domain[axis, 1])
-    find_subinterval(domain,n,axis,nbr_of_y_samples,f,x_root,depth=0,max_depth=100,tol=1e-6)
-    x_intervals=x_root.intervals()
-    print("the resolved intervals are :"+str(x_intervals))
-    l0=len(x_intervals)
-    print("the number of resolved intervals is :"+str(l0))
-    n0=n*l0
-    print("N_1 is equal to "+str(n0))
+    for idx, other_axis in enumerate(other_axes): 
+        fixed_samples_mat[idx, :] = np.random.uniform(domain[other_axis, 0], domain[other_axis, 1], size=nbr_of_samples)
 
-    print("test fuction find_Nk in y")
-    nbr_of_x_samples=10
-    axis=1
-    y_root=IntervalTree(domain[axis, 0], domain[axis, 1])
-    find_subinterval(domain,n,axis,nbr_of_x_samples,f,y_root,depth=0,max_depth=20,tol=1e-6)
-    y_intervals=y_root.intervals()
-    print("the resolved intervals in y are :"+str(y_intervals))
-    l1=len(y_intervals)
-    print("the number of resolved intervals in y is :"+str(l1))
-    n1=n*l1
-    print("N_2 is equal to "+str(n1))
+    values_test = np.linspace(domain[axis,0], domain[axis,1], 1000,endpoint=True)
+    
+    for j in range(nbr_of_samples):
+        fixed_variables = fixed_samples_mat[:,j]
+        function_1d = make_1d_slice(f,fixed_variables,axis,d)
+        p= cheb.Chebyshev.interpolate(function_1d,deg=n - 1,domain=domain[axis])
+        f_values = function_1d(values_test)
+        p_values = p(values_test)
+        max_error = np.max(np.abs(f_values - p_values))
+        resolved.append(max_error < tol)
 
-    # # don't thibk thsi is what we want 
-    # for x_leaf in x_root.leaves():
-    #     y_root=IntervalTree(domain[axis, 0], domain[axis, 1])
-    #     find_subinterval(np.array([[x_leaf.lo,x_leaf.hi]]+[[domain[axis,0],domain[axis,1]]]),n,axis,nbr_of_x_samples,f,y_root,depth=0,max_depth=20,tol=1e-6)
-    #     y_root_intervals=y_root.intervals()
-    #     print("the resolved intervals in y are :"+str(y_root_intervals))
-    #     nbr_intervals_y=len(y_root_intervals)
-    #     n1=n1+nbr_intervals_y*n
-    #     print("the number of resolved intervals in y is :"+str(nbr_intervals_y))
-    #     print("N_2 is equal to "+str(n*(nbr_intervals_y)))
-    #     x_leaf.y_tree = y_root
+    if np.all(resolved):
+        return 
+    
+    if depth>=max_depth:
+        raise ValueError("Maximum number of splits reached. The function may not be resolved within the given tolerance.")
+    
+    m=(domain[axis,1]+domain[axis,0])/2
+    left_domain = domain.copy()
+    left_domain[axis] = [domain[axis, 0],m]
 
-if __name__ == "__main__":
-    main() 
+    right_domain = domain.copy()
+    right_domain[axis] = [m,domain[axis, 1]]
+    left_node=node.add_child(IntervalTree(left_domain[axis, 0], left_domain[axis, 1], parent=node))
+    right_node=node.add_child(IntervalTree(right_domain[axis, 0], right_domain[axis, 1], parent=node))
+    find_subinterval_d(left_domain,n,axis,nbr_of_samples,f,left_node,depth=depth+1,max_depth=max_depth,tol=tol)
+    find_subinterval_d(right_domain,n,axis,nbr_of_samples,f,right_node,depth=depth+1,max_depth=max_depth,tol=tol)
+
