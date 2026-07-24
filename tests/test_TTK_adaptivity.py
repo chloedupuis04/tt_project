@@ -1,5 +1,6 @@
 import numpy as np
 from tt_project.TTK_adaptivity import *
+from mpl_toolkits import mplot3d
 
 def f(x, y):
         return 1/np.abs(x - y)
@@ -91,6 +92,38 @@ def main():
         fig_matrix.savefig(f"tests/figures/error_matrix_s_{s_name}.pdf")
 
         plt.close(fig_matrix)
+
+        # third plot : plot the interpolation in 3d 
+
+        X, Y = np.meshgrid(x_grid_pts, y_grid_pts)
+
+        fig_3d = plt.figure()
+        ax = plt.axes(projection='3d')
+
+        ax.plot_surface(X, Y, K_grid, rstride=10, cstride=10,
+                cmap="magma", edgecolor='none')
+        ax.set_xlabel('x')
+        ax.set_ylabel('y')
+        ax.set_zlabel('f(x,y)')
+
+        fig_3d.savefig(f"tests/figures/interpolation_3d_{s_name}.pdf")
+
+        # fourth plot : plot the error in 3d 
+        
+        X, Y = np.meshgrid(x_grid_pts, y_grid_pts)
+
+        fig_3d = plt.figure()
+        ax = plt.axes(projection='3d')
+
+        ax.plot_surface(X, Y, absolute_error, rstride=10, cstride=10,
+                cmap="magma", edgecolor='none')
+        ax.set_xlabel('x')
+        ax.set_ylabel('y')
+        ax.set_zlabel('f(x,y)')
+
+        fig_3d.savefig(f"tests/figures/error_3d_{s_name}.pdf")
+
+
 
     # Finish and save the common first graph
     ax_error.set_xlabel("Number of samples")
