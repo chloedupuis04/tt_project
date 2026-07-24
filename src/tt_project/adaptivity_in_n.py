@@ -24,7 +24,11 @@ def make_1d_slice(f, fixed_sample, axis, dimension):
 
     return function_1d
 
-def find_subinterval(domain,n,axis,nbr_of_y_samples,f,node,depth,max_depth,tol=1e-6):
+
+def phi(alpha, beta, x):
+    return (beta - alpha) / 2 * x + (alpha + beta) / 2
+
+#def find_subinterval(domain,n,axis,nbr_of_y_samples,f,node,depth,max_depth,tol=1e-6):
     
     resolved=[]
     other_axis=1-axis
@@ -78,7 +82,13 @@ def find_subinterval_d(domain,n,axis,nbr_of_samples,f,node,depth,max_depth,tol=1
     for j in range(nbr_of_samples):
         fixed_variables = fixed_samples_mat[:,j]
         function_1d = make_1d_slice(f,fixed_variables,axis,d)
-        p= cheb.Chebyshev.interpolate(function_1d,deg=n - 1,domain=domain[axis])
+        a, b = domain[axis]
+        reference_nodes = cheb.chebpts2(n)
+        local_nodes = phi(a, b, reference_nodes)
+        function_values = function_1d(local_nodes) # Values at second-kind nodes
+        coefficients = cheb.chebfit(reference_nodes,function_values,deg=n - 1)
+        p = cheb.Chebyshev(coefficients,domain=[a, b]) # Polynomial defined over [a, b]
+        #p= cheb.Chebyshev.interpolate(function_1d,deg=n - 1,domain=domain[axis]) 
         f_values = function_1d(values_test)
         p_values = p(values_test)
         max_error = np.max(np.abs(f_values - p_values))

@@ -32,8 +32,48 @@ def func_silly_aux(ind):
 def f2(x,y,z):
      return 1/((x-y)**2+(y-z)**2)
 
+
+
+def find_n_list(n,domain,nbr_samples,f):
+    list_n=[]
+    list_intervals=[]
+    d=domain.shape[0]
+    for axis in range(d):
+        root=IntervalTree(domain[axis, 0], domain[axis, 1])
+        find_subinterval_d(domain,n,axis,nbr_samples,f,root,depth=0,max_depth=100,tol=1e-6)
+        intervals=root.intervals()
+        list_intervals.append(intervals)
+        list_n.append(n*len(intervals))
+    return list_n,list_intervals
+
 def func2_silly_aux(ind):
     return f2(x_disc[ind[0]],y_disc[ind[1]],z_disc[ind[2]])
+
+print("test func")
+domain=np.array([[0,1]]+[[1,2]], dtype=float)
+n=8
+nbr_samples=20
+list_n,list_intervals=find_n_list(n,domain,nbr_samples,f)
+x_0_disc = concatenated_nodes(list_intervals[0], n)
+x_1_disc = concatenated_nodes(list_intervals[1], n)
+tol=1e-6 
+tt_cores, Jyl, Jyr, ilocl, ilocr, evalcnt = greedy2_cross(list_n, func_silly_aux, tol = tol)
+
+print("Shape of tt cores: ", [tt_core.shape for tt_core in tt_cores])
+
+# Test this method by hand
+M_true = np.zeros((list_n[0], list_n[1]))
+for i0 in range(list_n[0]):
+    for i1 in range(list_n[1]):
+            M_true[i0,  i1] = func_silly_aux([i0, i1])
+
+# Obtain the full tensor from the TT by hand (not optimal)
+
+M_approx = tt_to_tensor(tt_cores)
+err = M_true - M_approx
+err = np.linalg.norm(err.ravel())
+normM = np.linalg.norm(M_true.ravel())
+print("Relative Frobenius error between the true tensor and the TT approximation: ", err/normM)
 
 print("test of a 2D function")
 
@@ -90,7 +130,7 @@ print("Relative Frobenius error between the true tensor and the TT approximation
 
 print("test 2 with 3D function")
 
-n=8
+n=15
 nbr_of_yz_samples=20
 domain=np.array([[0,1]]+[[1,2]] +[[1,2]], dtype=float)
 axis=0
