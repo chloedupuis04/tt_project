@@ -1,5 +1,48 @@
 clear; close all; clc;
 
+% Folder containing this MATLAB script:
+% tt_project/src/Matlab
+matlabDir = fileparts(mfilename("fullpath"));
+
+% Root folder: % tt_project
+projectRoot = fullfile(matlabDir, "..", "..");
+
+%% Add EFTT to the MATLAB path
+
+% tt_project/external/EFTT
+efttDir = fullfile(projectRoot, "external", "EFTT");
+chebfunDir = fullfile(projectRoot, "external", "chebfun");
+ttToolboxDir = fullfile(projectRoot, "external", "TT-Toolbox");
+
+if ~isfolder(efttDir)
+    error([
+        "The EFTT folder was not found. " ...
+        "Run: git submodule update --init --recursive"
+    ]);
+end
+
+if ~isfolder(chebfunDir)
+    error("Chebfun was not found. Run: git submodule update --init --recursive");
+end
+
+if ~isfolder(ttToolboxDir)
+    error("TT-Toolbox was not found. Run: git submodule update --init --recursive");
+end
+
+addpath(genpath(efttDir));
+addpath(genpath(chebfunDir));
+addpath(genpath(ttToolboxDir));
+rehash;
+
+%% Folder where MATLAB figures are saved
+
+% tt_project/src/Matlab/test/figures
+outDir = fullfile(matlabDir, "test", "figures");
+
+if ~isfolder(outDir)
+    mkdir(outDir);
+end
+
 d = 2;
 
 % Initialize randomness only once
@@ -25,8 +68,11 @@ c2Osc = cOsc(2);
 % Save oscillatory parameters
 parametersOsc = table(wOsc, c1Osc, c2Osc);
 
-% Change this path when running on another computer
-outputFileOsc = "/Users/coco/Desktop/tt_project/tests/genz_oscillatory_parameters.csv";
+outputFileOsc = fullfile( ...
+    projectRoot, ...
+    "tests", ...
+    "genz_corner_peak_parameters.csv" ...
+);
 
 writetable(parametersOsc, outputFileOsc);
 
@@ -55,8 +101,12 @@ c2Corner = cCorner(2);
 % Save corner peak parameters
 parametersCorner = table(c1Corner, c2Corner);
 
-% Change this path if running on another computer
-outputFileCorner = "/Users/coco/Desktop/tt_project/tests/genz_corner_peak_parameters.csv";
+outputFileCorner = fullfile( ...
+    projectRoot, ...
+    "tests", ...
+    "genz_corner_peak_parameters.csv" ...
+);
+
 
 writetable(parametersCorner, outputFileCorner);
 
@@ -79,6 +129,9 @@ Ntol = numel(tol_list);
 
 outDir = 'tests/figures';
 if ~exist(outDir, 'dir'); mkdir(outDir); end
+
+
+
 N_grid = 100;
 tol = 1e-10;
 
@@ -255,83 +308,13 @@ for k = 1:numel(funcHandles)
     );
 
     writetable( ...
-    resultsTable, ...
-    fullfile("/Users/coco/Desktop/tt_project/tests", sprintf('EFTT_results_%s.csv', fname)) ...
+        resultsTable, ...
+        fullfile( projectRoot,"tests", sprintf("EFTT_results_%s.csv", fname) ) ...
     );
 end
 
 
 
-
-%% Test function: f(x,y) = 1/|x-y|
-% fRaw = @(x,y) 1 ./ abs(x - y);
-
-% %% Parameters
-% S        = [1e-2, 1e-3, 1e-4, 1e-6];
-% tol_list = [1e-6, 1e-8, 1e-10, 1e-12,1e-14];
-% N_s = 1000;
-% N_t = 1000;
-% Ns   = numel(S);
-% Ntol = numel(tol_list);
-% 
-% err     = zeros(Ns, Ntol);
-% nChebX  = zeros(Ns, Ntol);
-% nChebY  = zeros(Ns, Ntol);
-% 
-% outDir = 'tests/figures';
-% if ~exist(outDir, 'dir'); mkdir(outDir); end
-% 
-% figX = figure; hold on;
-% figY = figure; hold on;
-% 
-% for iS = 1:Ns
-%     s = S(iS);
-%     domain = [0, 1 - s/2; 1 + s/2, 2];   % row1 = x bounds, row2 = y bounds
-%     fMapped = @(z) fRaw( mapDim(z(:,1), domain(1,:)), mapDim(z(:,2), domain(2,:)) );
-% 
-%     fprintf('Building EFTT for s = %.0e ...\n', s);
-% 
-%     for i = 1:Ntol
-%         tol = tol_list(i);
-%         eftt = EFTT(fMapped, 2, 'tol', tol);
-% 
-%         d = degree(eftt);          % assign first, then index
-%         nChebX(iS,i) = d(1);
-%         nChebY(iS,i) = d(2);
-% 
-%         % Random test points in the true domain
-%         xPts = domain(1,1) + (domain(1,2)-domain(1,1)) * rand(N_s, 1);
-%         yPts = domain(2,1) + (domain(2,2)-domain(2,1)) * rand(N_t, 1);
-%         xRef = mapDimInv(xPts, domain(1,:));
-%         yRef = mapDimInv(yPts, domain(2,:));
-% 
-%         [XX, YY] = ndgrid(xRef, yRef);
-%         K = reshape(evaluateBatch(eftt, [XX(:), YY(:)]), N_s, N_t);
-%         Kexact = 1 ./ abs(xPts - yPts');
-% 
-%         err(iS,i) = norm(K - Kexact, 'fro') / norm(Kexact, 'fro');
-%     end
-% 
-%     figure(figX);
-%     semilogy(nChebX(iS,:), err(iS,:), '-o', 'DisplayName', sprintf('s = %.0e', s));
-% 
-%     figure(figY);
-%     semilogy(nChebY(iS,:), err(iS,:), '-o', 'DisplayName', sprintf('s = %.0e', s));
-% end
-% 
-% figure(figX);
-% xlabel('nbr cheb nodes (x)');
-% ylabel('Relative error');
-% title('EFTT relative error vs. nbr cheb nodes in x');
-% legend show; grid on; hold off;
-% saveas(figX, fullfile(outDir, 'error_EFTT_vs_nx.pdf'));
-% 
-% figure(figY);
-% xlabel('nbr cheb nodes (y)');
-% ylabel('Relative error');
-% title('EFTT relative error vs. nbr cheb nodes in y');
-% legend show; grid on; hold off;
-% saveas(figY, fullfile(outDir, 'error_EFTT_vs_ny.pdf'));
 
 %% ---------------------------------------------------------------------
 %  Helper functions
