@@ -1,0 +1,3 @@
+[submodule "EFTT"]
+	path = external/EFTT
+	url = https://github.com/cstroessner/EFTT.git
