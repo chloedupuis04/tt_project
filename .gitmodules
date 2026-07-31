@@ -1,3 +1,9 @@
 [submodule "EFTT"]
 	path = external/EFTT
 	url = https://github.com/cstroessner/EFTT.git
+[submodule "external/chebfun"]
+	path = external/chebfun
+	url = https://github.com/chebfun/chebfun.git
+[submodule "external/TT-Toolbox"]
+	path = external/TT-Toolbox
+	url = https://github.com/oseledets/TT-Toolbox.git
