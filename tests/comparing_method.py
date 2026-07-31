@@ -13,7 +13,6 @@ def f_genz_oscillatory(x, y):
     return np.cos( 2 * np.pi * w + c1 * (x + 1) / 2+ c2 * (y + 1) / 2)
 
 
-
 def f_genz_corner_peak(x, y):
     parameters = np.loadtxt(
     "/Users/coco/Desktop/tt_project/tests/genz_corner_peak_parameters.csv",

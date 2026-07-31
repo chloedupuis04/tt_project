@@ -17,7 +17,8 @@ src/tt_project/
 # Project Structure
 
 ## Core Algorithms
-
+- `splitting.py` – procedure fro splitting intervals 
+- `adaptive_TT.py` – our new method
 - `tt_svd.py` – TT-SVD algorithm with fixed ranks  
 - `tt_svd_delta.py` – TT-SVD algorithm with adaptive ranks (based on a tolerance δ)  
 - `rounding.py` – Tensor rounding procedure  
@@ -26,6 +27,7 @@ src/tt_project/
 - `left_ortho.py` – Left orthogonalization  
 - `right_ortho.py` – Right orthogonalization  
 - `PTTK.py` – PTTK offline and online stages
+- `TT.py` – class for Tensor Train
 
 ---
 
@@ -48,6 +50,7 @@ src/tt_project/
 
 ## Test Scripts
 
+- `comparing_method.py` – Compare our method and the EFTT on somes exmaples 
 - `test_tt_svd_delta.py` – Study the approximation error on two example tensors  
 - `test_tt_rounding.py` – Study the error and rank variation for TT rounding  
 - `test_tt_pttk.py` – Test the implementation of the PTTK algorithm  
