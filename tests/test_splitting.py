@@ -4,7 +4,7 @@
 
 import numpy as np
 from tt_project.greedy2_cross import *
-from tt_project.adaptivity_in_n import *
+from tt_project.splitting import *
 from numpy.polynomial import chebyshev as cheb
 from tt_project.interval_tree import IntervalTree
 from tt_project.tt_to_tensor import tt_to_tensor

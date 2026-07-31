@@ -17,7 +17,7 @@ import matplotlib
 matplotlib.use("Agg")  # non-interactive backend: renders to file, avoids macOS GUI backend crash
 import matplotlib.pyplot as plt
 from tt_project.greedy2_cross import *
-from tt_project.adaptivity_in_n import find_subinterval
+from tt_project.splitting import find_subinterval
 from numpy.polynomial import chebyshev as cheb
 from tt_project.interval_tree import IntervalTree
 from tt_project.tt_to_tensor import tt_to_tensor
